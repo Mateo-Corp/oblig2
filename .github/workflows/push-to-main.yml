@@ -1,10 +1,7 @@
 name: Terraform CD
 
-on:
-  push:
-    branches:
-      - main
-
+on: workflow_dispatch
+  
 permissions:
   id-token: write
   contents: read
@@ -79,7 +76,7 @@ jobs:
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "test"
       ACCOUNT_TIER: "Premium"
-      ACCOUNT_REPLICATION_TYPE: "GRS" 
+      ACCOUNT_REPLICATION_TYPE: "ZRS" 
     
     steps:
       - name: Checkout code
@@ -139,7 +136,7 @@ jobs:
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "prod"
       ACCOUNT_TIER: "Premium"
-      ACCOUNT_REPLICATION_TYPE: "GRS"
+      ACCOUNT_REPLICATION_TYPE: "ZRS"
     
     steps:
       - name: Checkout code
