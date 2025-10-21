@@ -28,8 +28,7 @@ echo ""
 # Create artifact
 echo "2️⃣ Creating artifact..."
 ARTIFACT_NAME="terraform-${VERSION}.tar.gz"
-
-tar -czf $ARTIFACT_NAME .
+tar -czf "../${ARTIFACT_NAME}" .
 
 echo "✅ Artifact created: $ARTIFACT_NAME"
 echo ""

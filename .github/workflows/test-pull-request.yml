@@ -43,7 +43,7 @@ jobs:
             echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           } >> "$GITHUB_ENV"
-        
+
       - name: Build Terraform Artifact
         run: |
           chmod +x build.sh
@@ -96,7 +96,7 @@ jobs:
             -backend-config="key=oblig2/dev/dev.tfstate" \
             -input=false \
             -no-color
-      
+
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
@@ -109,21 +109,21 @@ jobs:
     env:
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
-    
+
     strategy:
       matrix:
         environment: [dev, test, prod]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.13.3
           terraform_wrapper: false
-      
+
       - name: Azure login (OIDC)
         uses: azure/login@v2
         with:
@@ -139,7 +139,7 @@ jobs:
             echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}"
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           } >> "$GITHUB_ENV"
-      
+
       - name: Terraform Init
         run: |
           terraform init \
@@ -147,7 +147,7 @@ jobs:
             -backend-config="key=oblig2/${{ matrix.environment }}/${{ matrix.environment }}.tfstate" \
             -input=false \
             -no-color
-      
+
       - name: Set Environment Variables
         run: |
           case "${{ matrix.environment }}" in
@@ -167,7 +167,7 @@ jobs:
               echo "ACCOUNT_REPLICATION_TYPE=GRS" >> $GITHUB_ENV
               ;;
           esac
-      
+
       - name: Terraform Plan
         id: plan
         run: |
@@ -178,10 +178,10 @@ jobs:
             -var="account_tier=${{ env.ACCOUNT_TIER }}" \
             -var="account_replication_type=${{ env.ACCOUNT_REPLICATION_TYPE }}" \
             -out=${{ matrix.environment }}.tfplan 2>&1 | tee plan-output.txt
-          
+
           PLAN_EXIT_CODE=${PIPESTATUS[0]}
           set -e
-          
+
           # Lagre output og exit code
           {
             echo "PLAN_EXIT_CODE=${PLAN_EXIT_CODE}"
@@ -189,10 +189,10 @@ jobs:
             cat plan-output.txt
             echo 'EOF'
           } >> "$GITHUB_ENV"
-          
+
           exit ${PLAN_EXIT_CODE}
         continue-on-error: true
-      
+
       - name: Comment PR with Plan
         uses: actions/github-script@v7
         if: github.event_name == 'pull_request'
