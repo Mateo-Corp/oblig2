@@ -44,6 +44,47 @@ jobs:
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           } >> "$GITHUB_ENV"
 
+            - name: Build Terraform Artifact
+        
+      - name: Build Terraform Artifact
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Read artifact filename
+        id: read-artifact
+        run: |
+          if [ -f ARTIFACT_NAME.txt ]; then
+            echo "name=$(cat ARTIFACT_NAME.txt)" >> $GITHUB_OUTPUT
+          else
+            # fallback to glob
+            ART=$(ls terraform-*.tar.gz | head -n1)
+            echo "name=${ART}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload artifact to Azure Blob
+        uses: azure/CLI@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            echo "Uploading ${{ steps.read-artifact.outputs.name }} to Azure Blob..."
+            ART=${{ steps.read-artifact.outputs.name }}
+            # create container if it doesn't exist (idempotent)
+            az storage container create \
+              --account-name "${{ secrets.AZURE_STORAGE_ACCOUNT }}" \
+              --name terraform-artifacts \
+              --auth-mode login
+
+            az storage blob upload \
+              --account-name "${{ secrets.AZURE_STORAGE_ACCOUNT }}" \
+              --container-name terraform-artifacts \
+              --file "$ART" \
+              --name "$ART" \
+              --auth-mode login \
+              --overwrite true
+
+            echo "Uploaded blob: terraform-artifacts/$ART"
+
       - name: Terraform Format Check
         id: fmt
         run: terraform fmt -check -recursive
