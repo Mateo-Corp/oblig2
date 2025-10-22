@@ -4,7 +4,7 @@ Dette prosjektet demonstrerer "Build Once, Deploy Many" prinsippet med Terraform
 
 ## 🎯 Konsept
 
-test
+test ekfsefs
 
 **Build Once, Deploy Many** betyr:
 - Bygg artifact ÉN gang
