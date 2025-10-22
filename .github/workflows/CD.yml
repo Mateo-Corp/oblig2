@@ -62,7 +62,7 @@ jobs:
     needs: deploy-dev
     environment: test
     env:
-      BACKEND_HCL: "./backend-config/test.tfvars"
+      BACKEND_HCL: "${{ github.workspace }}/backend-config/test.tfvars"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "test"
