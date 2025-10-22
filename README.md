@@ -4,7 +4,7 @@ Dette prosjektet demonstrerer "Build Once, Deploy Many" prinsippet med Terraform
 
 ## 🎯 Konsept
 
-wtf is going on
+wtf is going on es
 
 **Build Once, Deploy Many** betyr:
 - Bygg artifact ÉN gang
