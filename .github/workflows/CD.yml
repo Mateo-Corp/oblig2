@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      BACKEND_HCL: "./shared/backend.hcl"
+      BACKEND_HCL: "./backend-config/dev.tfvars"
       ACCOUNT_TIER: "Standard"
       ACCOUNT_REPLICATION_TYPE: "LRS"
       TF_INPUT: "false"
@@ -79,7 +79,7 @@ jobs:
     needs: deploy-dev
     environment: test
     env:
-      BACKEND_HCL: "./shared/backend.hcl"
+      BACKEND_HCL: "./backend-config/test.tfvars"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "test"
@@ -143,7 +143,7 @@ jobs:
     needs: deploy-test
     environment: prod
     env:
-      BACKEND_HCL: "./shared/backend.hcl"
+      BACKEND_HCL: "./backend-config/prod.tfvars"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "prod"
