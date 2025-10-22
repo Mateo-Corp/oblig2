@@ -53,7 +53,7 @@ cd $WORKSPACE/terraform
 
 # Initialize with backend
 echo "2️⃣ Initializing Terraform..."
-terraform init -backend-config=../backend-configs/backend-${ENVIRONMENT}.tfvars
+terraform init -backend-config=../../backend-configs/backend-${ENVIRONMENT}.tfvars
 echo ""
 
 # Plan

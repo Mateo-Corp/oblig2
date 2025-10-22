@@ -15,9 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      BACKEND_HCL: "${{ github.workspace }}/backend-config/dev.tfvars"
-      ACCOUNT_TIER: "Standard"
-      ACCOUNT_REPLICATION_TYPE: "LRS"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "dev"
