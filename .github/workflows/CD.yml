@@ -59,12 +59,9 @@ jobs:
     needs: deploy-dev
     environment: test
     env:
-      BACKEND_HCL: "${{ github.workspace }}/backend-config/test.tfvars"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "test"
-      ACCOUNT_TIER: "Premium"
-      ACCOUNT_REPLICATION_TYPE: "ZRS"
     
     steps:
       - name: Checkout code
@@ -92,30 +89,13 @@ jobs:
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           } >> "$GITHUB_ENV"
       
-      - name: Terraform Init
-        working-directory: ./terraform
-        run: |
-          terraform init \
-            -backend-config="${{ env.BACKEND_HCL }}" \
-            -backend-config="key=oblig2/${{ env.ENVIRONMENT }}/terraform.tfstate" \
-            -input=false \
-            -no-color
-      
-      - name: Terraform Apply
-        working-directory: ./terraform
-        run: |
-          terraform apply -auto-approve \
-            -var="environment=${{ env.ENVIRONMENT }}" \
-            -var="account_tier=${{ env.ACCOUNT_TIER }}" \
-            -var="account_replication_type=${{ env.ACCOUNT_REPLICATION_TYPE }}" \
-            -no-color
-      
-      - name: Terraform Output
-        working-directory: ./terraform
-        id: output
-        run: |
-          echo "### Terraform Outputs for TEST" >> $GITHUB_STEP_SUMMARY
-          terraform output -no-color | tee -a $GITHUB_STEP_SUMMARY
+      - name: Fetch artifact
+        run:
+          az storage blob download   --account-name sttfstatems   --container-name tfstate   --name myartifact.zip   --file ./myartifact.zip   --auth-mode login
+        
+      - name: Deploy
+        run: 
+          ./scripts/deploy.sh test myartifact.zip
 
   deploy-prod:
     name: Deploy to PROD
@@ -123,12 +103,9 @@ jobs:
     needs: deploy-test
     environment: prod
     env:
-      BACKEND_HCL: "./backend-config/prod.tfvars"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       ENVIRONMENT: "prod"
-      ACCOUNT_TIER: "Premium"
-      ACCOUNT_REPLICATION_TYPE: "ZRS"
     
     steps:
       - name: Checkout code
@@ -156,30 +133,13 @@ jobs:
             echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           } >> "$GITHUB_ENV"
       
-      - name: Terraform Init
-        working-directory: ./terraform
-        run: |
-          terraform init \
-            -backend-config="${{ env.BACKEND_HCL }}" \
-            -backend-config="key=oblig2/${{ env.ENVIRONMENT }}/terraform.tfstate" \
-            -input=false \
-            -no-color
-      
-      - name: Terraform Apply
-        working-directory: ./terraform
-        run: |
-          terraform apply -auto-approve \
-            -var="environment=${{ env.ENVIRONMENT }}" \
-            -var="account_tier=${{ env.ACCOUNT_TIER }}" \
-            -var="account_replication_type=${{ env.ACCOUNT_REPLICATION_TYPE }}" \
-            -no-color
-      
-      - name: Terraform Output
-        working-directory: ./terraform
-        id: output
-        run: |
-          echo "### Terraform Outputs for PROD" >> $GITHUB_STEP_SUMMARY
-          terraform output -no-color | tee -a $GITHUB_STEP_SUMMARY
+      - name: Fetch artifact
+        run:
+          az storage blob download   --account-name sttfstatems   --container-name tfstate   --name myartifact.zip   --file ./myartifact.zip   --auth-mode login
+        
+      - name: Deploy
+        run: 
+          ./scripts/deploy.sh prod myartifact.zip
       
       - name: Deployment Summary
         run: |
