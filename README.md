@@ -4,6 +4,8 @@ Dette prosjektet demonstrerer "Build Once, Deploy Many" prinsippet med Terraform
 
 ## 🎯 Konsept
 
+test
+
 **Build Once, Deploy Many** betyr:
 - Bygg artifact ÉN gang
 - Deploy SAMME artifact til flere miljøer
