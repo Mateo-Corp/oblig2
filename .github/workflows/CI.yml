@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      BACKEND_HCL: "./shared/backend.hcl"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       
