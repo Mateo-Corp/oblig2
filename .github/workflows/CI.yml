@@ -53,8 +53,7 @@ jobs:
     needs: validate-and-build-artifact
     environment: ${{ matrix.environment }}
     env:
-      BACKEND_HCL: "../../backend-configs/backend-${{ matrix.environment }}.tfvars"
-      DIRECTORY: "./workspace-${{ matrix.environment }}"
+      BACKEND_HCL: "./backend-configs/backend-${{ matrix.environment }}.tfvars"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
     
@@ -89,7 +88,7 @@ jobs:
           } >> "$GITHUB_ENV"
       
       - name: Terraform Init
-        working-directory: ${{ env.DIRECTORY }}/terraform
+        working-directory: ./terraform
         run: |
           terraform init \
             -backend-config="${{ env.BACKEND_HCL }}" \
@@ -118,7 +117,7 @@ jobs:
           esac
       
       - name: Terraform Plan
-        working-directory: ${{ env.DIRECTORY }}/terraform
+        working-directory: ./terraform
         id: plan
         run: |
           # Kjør plan og fang både stdout og stderr
