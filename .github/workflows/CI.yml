@@ -91,7 +91,7 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform init \
-            -backend-config="${{ env.BACKEND_HCL }}" \
+            -backend-config=${{ env.BACKEND_HCL }} \
             -backend-config="key=oblig2/${{ matrix.environment }}/terraform.tfstate" \
             -input=false \
             -no-color
