@@ -2,7 +2,7 @@
 
 Dette prosjektet demonstrerer "Build Once, Deploy Many" prinsippet med Terraform og Azure.
 
-## 🎯 Konsept
+## 🎯 Konsept endring
 
 **Build Once, Deploy Many** betyr:
 - Bygg artifact ÉN gang
