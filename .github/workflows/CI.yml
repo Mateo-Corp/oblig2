@@ -53,7 +53,7 @@ jobs:
     needs: validate-and-build-artifact
     environment: ${{ matrix.environment }}
     env:
-      BACKEND_HCL: "../../environments/backend-${{ matrix.environment }}.tfvars"
+      BACKEND_HCL: "${{ github.workspace }}/environments/backend-${{ matrix.environment }}.tfvars"
       DIRECTORY: "./workspace-${{ matrix.environment }}"
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
